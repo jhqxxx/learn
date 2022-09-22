@@ -1,9 +1,18 @@
+'''
+Descripttion: 
+version: 
+Author: jhq
+Date: 2022-09-20 22:22:06
+LastEditors: jhq
+LastEditTime: 2022-09-21 23:24:07
+'''
 from matplotlib.pyplot import axis
 import numpy as np
 
 class BatchNormalization:
     '''
-    思路：强制性调整输入数据的分布，适当的输入数据，带来适当的激活值分布，保证训练正常进行
+    思路：强制性调整输入数据的分布，均值为0，方差为1，
+        适当的输入数据，带来适当的激活值分布，保证训练正常进行
     作用：防止过拟合 | 加速收敛
     位置：Affine(仿射层，矩阵乘法，指全连接层)、convolution层后面
     原理：对数据的均值方差进行调整，加速训练收敛
