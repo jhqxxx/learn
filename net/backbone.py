@@ -6,6 +6,7 @@ Date: 2022-09-25 14:16:51
 LastEditors: jhq
 LastEditTime: 2022-09-26 23:21:22
 '''
+from re import L
 from turtle import forward
 from xml.etree.ElementInclude import include
 import torch
@@ -104,7 +105,7 @@ class Bottleneck(nn.Module):
     def forward(self, x):
         identity = x
         if self.downsample is not None:
-            identity = self.downsample(x)
+            identity = self.downsample(identity)
         x = self.relu(self.bn1(self.conv1(x)))
         x = self.relu(self.bn2(self.conv2(x)))
         x = self.bn3(self.conv3(x))
@@ -182,6 +183,32 @@ def get_resnet(layer_num, num_classes=1000, include_top=True):
         return ResNet(Bottleneck, [3, 8, 36, 3], num_classes=num_classes, include_top=include_top)
     else:
         return ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes, include_top=include_top)
+
+
+class BottleneckX(nn.Module):
+    expansion = 2
+    def __init__(self, in_channel, mid_channel, stride=1, padding=1, downsample=None, group=1):
+        super(BottleneckX, self).__init__()
+        self.conv1 = conv1x1(in_channels=in_channel, out_channels=mid_channel)
+        self.bn1 = nn.BatchNorm2d(mid_channel)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = conv3x3(in_channels=mid_channel, out_channels=mid_channel, stride=stride, padding=padding, groups=group)
+        self.bn2 = nn.BatchNorm2d(mid_channel)
+        self.conv3 = conv1x1(in_channels=mid_channel, out_channels=mid_channel*self.expansion)
+        self.bn3 = nn.BatchNorm2d(mid_channel*self.expansion)
+        self.downsample = downsample
+    
+    def forward(self, x):
+        identity = x
+        x = self.relu(self.bn1(self.conv1(x)))
+        x = self.relu(self.bn2(self.conv2(x)))
+        x = self.bn3(self.conv3(x))
+        if self.downsample is not None:
+            identity = self.downsample(identity)
+        x += identity
+        x = self.relu(x)
+        return x
+
 
 # model = VGG(num_classes=10)
 model = get_resnet(50, 10)

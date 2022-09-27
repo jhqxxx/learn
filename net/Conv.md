@@ -9,7 +9,7 @@
 ### 卷积
 * 普通卷积：
     - 特征图Hin*Win*Din * 滤波器h*w*Din*Dout -> 输出Hout*Wout*Dout
-    - 特征图大小i, kernei size=k, padding=p, stride=s,输出为：lower_bound((1+2p-k)/s)+1
+    - 特征图大小i, kernei size=k, padding=p, stride=s,输出为：lower_bound((i+2p-k)/s)+1
 
 * 分组卷积：
     - 将filter分成n个组，每个组负责特征图的部分深度，再将各组结果concat。

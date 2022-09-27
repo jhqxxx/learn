@@ -12,7 +12,14 @@
 #### Soft NMS
     以一个权重的方式，将获得的IOU取高斯指数后乘上原得分，之后重新排序再继续循环
 #### 模型评价标准 AP与mAP
-
+    precision = TP/(TP+FP)
+    Recall = TP/(TP+FN)
+    根据检测框与真实框对比，IoU/置信度，计算样本数据的precision和recall
+    绘制PR曲线, 将PR曲线平滑处理
+    AP = ∫p(r)dr，  r->0-1
+    针对自变量r(recall),对曲线p(precision)做积分
+    不同IoU阈值可以得到多个AP值，如AP50，AP75等
+    mAP是在所有类别下的均值
 ### 二阶段
 #### Faster RCNN
 #### Mask RCNN
