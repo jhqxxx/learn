@@ -22,7 +22,11 @@
     mAP是在所有类别下的均值
 ### 二阶段
 #### Faster RCNN
+    通过Region proposal Networks生成anchors,
+    使用ROI poling(暂未理解)提取anchor特征图
+    分类回归
 #### Mask RCNN
+    ROIAlign??
 #### Cascade RCNN
 
 ### 一阶段
