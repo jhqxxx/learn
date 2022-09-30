@@ -20,6 +20,7 @@
     针对自变量r(recall),对曲线p(precision)做积分
     不同IoU阈值可以得到多个AP值，如AP50，AP75等
     mAP是在所有类别下的均值
+
 ### 二阶段
 #### Faster RCNN
     通过Region proposal Networks生成anchors,
@@ -27,12 +28,19 @@
     分类回归
 #### Mask RCNN
     ROIAlign??
+    https://github.com/matterport/Mask_RCNN
 #### Cascade RCNN
+    级联分类器
 
 ### 一阶段
 #### Yolo系列
+    v1,v2理解
+    v3, v4, v5, v6, X理解及代码阅读，复现
 #### SSD
+    引入多尺度特征图
 #### Retinanet
-
+    Focal Loss
+    https://github.com/yhenon/pytorch-retinanet
 ### 无anchor
 #### centernet
+    热力图
