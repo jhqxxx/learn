@@ -210,6 +210,7 @@ class BottleneckX(nn.Module):
         return x
 
 
+
 # model = VGG(num_classes=10)
 model = get_resnet(50, 10)
 print(model)
