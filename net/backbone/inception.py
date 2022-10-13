@@ -173,3 +173,212 @@ class InceptionV1(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 
+class InceptionBlockA(nn.Module):
+    '''Figure 5. Inception modules where each 5 × 5 convolution 
+                is replaced by two 3 × 3 convolution'''
+    def __init__(self, in_channel, out_c1, out_c2, out_c3, out_c4):
+        super(InceptionBlockA, self).__init__()
+        # block 1*1
+        self.p1 = BasicConv2d(in_channel, out_c1, kernel_size=1)
+        # block pool
+        self.p2 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, stride=1, padding=1),
+            BasicConv2d(in_channel, out_c2, kernel_size=1)
+        )
+        # block 3*3
+        self.p3 = nn.Sequential(
+            BasicConv2d(in_channel, out_c3[0], kernel_size=1),
+            BasicConv2d(out_c3[0], out_c3[1], kernel_size=3, padding=1)
+        )
+        
+        # block 3*3,3*3
+        self.p4 = nn.Sequential(
+            BasicConv2d(in_channel, out_c4[0], kernel_size=1),
+            BasicConv2d(out_c4[0], out_c4[0], kernel_size=3, padding=1),
+            BasicConv2d(out_c4[0], out_c4[1], kernel_size=3, padding=1)
+        )
+    
+    def forward(self, x):
+        out1 = self.p1(x)
+        out2 = self.p2(x)
+        out3 = self.p3(x)
+        out4 = self.p4(x)
+        out = torch.cat([out1, out2, out3, out4], dim=1)
+        return out
+
+
+class InceptionBlockB(nn.Module):
+    '''Figure 6. Inception modules after the factorization of the n × n
+        convolutions. In our proposed architecture, we chose n = 7 for
+        the 17 × 17 grid'''
+    def __init__(self, in_channel, out_c1, out_c2, out_c3, out_c4):
+        super(InceptionBlockB, self).__init__()
+        # block 1*1
+        self.p1 = BasicConv2d(in_channel, out_c1, kernel_size=1)
+        # block maxpool
+        self.p2 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, stride=1, padding=1),
+            BasicConv2d(in_channel, out_c2, kernel_size=1)
+        )
+        # block 1*7,7*1
+        self.p3 = nn.Sequential(
+            BasicConv2d(in_channel, out_c3[0], kernel_size=1),
+            BasicConv2d(out_c3[0], out_c3[0], kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(out_c3[0], out_c3[1], kernel_size=(7, 1), padding=(3, 0))
+        )
+        # block 1*7,7*1,1*7,7*1
+        self.p4 = nn.Sequential(
+            BasicConv2d(in_channel, out_c4[0], kernel_size=1),
+            BasicConv2d(out_c4[0], out_c4[0], kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(out_c4[0], out_c4[0], kernel_size=(7, 1), padding=(3, 0)),
+            BasicConv2d(out_c4[0], out_c4[0], kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(out_c4[0], out_c4[1], kernel_size=(7, 1), padding=(3, 0))
+        )
+    
+    def forward(self, x):
+        out1 = self.p1(x)
+        out2 = self.p2(x)
+        out3 = self.p3(x)
+        out4 = self.p4(x)
+        out = torch.cat([out1, out2, out3, out4], dim=1)
+        return out
+
+
+class InceptionBlockC(nn.Module):
+    '''Figure 7. Inception modules with expanded the filter bank outputs.
+        This architecture is used on the coarsest (8 × 8) grids to promote
+        high dimensional representations, as suggested by principle 2 of
+        Section 2. We are using this solution only on the coarsest grid,
+        since that is the place where producing high dimensional sparse
+        representation is the most critical as the ratio of local processing
+        (by 1 × 1 convolutions) is increased compared to the spatial aggregation'''
+    def __init__(self, in_channel, out_c1, out_c2, out_c3, out_c4):
+        super(InceptionBlockC, self).__init__()
+        # block 1*1
+        self.p1 = BasicConv2d(in_channel, out_c1, kernel_size=1)
+        # block pool
+        self.p2 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, stride=1, padding=1),
+            BasicConv2d(in_channel, out_c2, kernel_size=1)
+        )
+        # block 1*3,3*1
+        self.p3_1x1 = BasicConv2d(in_channel, out_c3[0], kernel_size=1)
+        self.p3_1x3 = BasicConv2d(out_c3[0], out_c3[1], kernel_size=(1, 3), padding=(0, 1))
+        self.p3_3x1 = BasicConv2d(out_c3[0], out_c3[1], kernel_size=(3, 1), padding=(1, 0))
+        # block 3*3, 1*3, 3*1
+        self.p4_3x3 = nn.Sequential(
+            BasicConv2d(in_channel, out_c4[0], kernel_size=1),
+            BasicConv2d(out_c4[0], out_c4[0], kernel_size=3, padding=1)
+        )
+        self.p4_1x3 = BasicConv2d(out_c4[0], out_c4[1], kernel_size=(1, 3), padding=(0, 1))
+        self.p4_3x1 = BasicConv2d(out_c4[0], out_c4[1], kernel_size=(3, 1), padding=(1, 0))
+    
+    def forward(self, x):
+        out1 = self.p1(x)
+        out2 = self.p2(x)
+        out3_1x1 = self.p3_1x1(x)
+        out3_1x3 = self.p3_1x3(out3_1x1)
+        out3_3x1 = self.p3_3x1(out3_1x1)
+        out4_3x3 = self.p4_3x3(x)
+        out4_1x3 = self.p4_1x3(out4_3x3)
+        out4_3x1 = self.p4_3x1(out4_3x3)
+        out = torch.cat([out1, out2, out3_1x3, out3_3x1, out4_1x3, out4_3x1], dim=1)
+        return out
+
+
+class InceptionBlockD(nn.Module):
+    '''Figure 10. Inception module that reduces the grid-size while expands the filter banks. 
+    It is both cheap and avoids the representational bottleneck as is suggested by principle 1. '''
+    def __init__(self, in_channel, out_c2, out_c3):
+        super(InceptionBlockD, self).__init__()
+        # block pool
+        self.p1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        # block 3*3
+        self.p2 = nn.Sequential(
+            BasicConv2d(in_channel, out_c2[0], kernel_size=1),
+            BasicConv2d(out_c2[0], out_c2[1], kernel_size=3, stride=2)
+        )
+        # block 3*3,3*3
+        self.p3 = nn.Sequential(
+            BasicConv2d(in_channel, out_c3[0], kernel_size=1),
+            BasicConv2d(out_c3[0], out_c3[0], kernel_size=3, padding=1),
+            BasicConv2d(out_c3[0], out_c3[1], kernel_size=3, stride=2)
+        )
+    
+    def forward(self, x):
+        out1 = self.p1(x)
+        out2 = self.p2(x)
+        out3 = self.p3(x)
+        out = torch.cat([out1, out2, out3], dim=1)
+        return out   
+
+
+class AuxClassifier(nn.Module):
+    def __init__(self, in_channel, num_classes):
+        super(AuxClassifier, self).__init__()
+        self.avgpool = nn.AvgPool2d(kernel_size=5, stride=3)
+        self.conv1x1 = BasicConv2d(in_channel, 128, kernel_size=1)
+        self.linear = nn.Linear(5*5*128, num_classes)
+    
+    def forward(self, x):
+        x = self.avgpool(x)
+        x = self.conv1x1(x)
+        out = self.linear(x)
+        return out
+
+
+class InceptionV3(nn.Module):
+    def __init__(self, num_classes, aux_logits):
+        super(InceptionV3, self).__init__()
+        self.aux_logits = aux_logits
+        self.conv1 = BasicConv2d(3, 32, kernel_size=3, stride=2)
+        self.conv2 = BasicConv2d(32, 32, kernel_size=3)
+        self.conv3 = BasicConv2d(32, 64, kernel_size=3, padding=1)
+        self.pool1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv4 = BasicConv2d(64, 80, kernel_size=3)
+        self.conv5 = BasicConv2d(80, 192, kernel_size=3, stride=2)
+        self.conv6 = BasicConv2d(192, 288, kernel_size=3, padding=1)
+        self.inception5_1 = InceptionBlockA(288, 72, 36, [72, 72], [72, 108])
+        self.inception5_2 = InceptionBlockA(288, 72, 36, [72, 72], [72, 108])
+        self.inception5_3 = InceptionBlockA(288, 64, 28, [64, 64], [64, 100])
+        self.inception_connect1 = InceptionBlockD(256, 256, 256)
+        self.inception6_1 = InceptionBlockB(768, 142, 71, [142, 142], [142, 213])
+        self.inception6_2 = InceptionBlockB(768, 142, 71, [142, 142], [142, 213])
+        self.inception6_3 = InceptionBlockB(768, 142, 71, [142, 142], [142, 213])
+        if self.aux_logits:
+            self.aux_classifier = AuxClassifier(768, num_classes)
+        self.inception6_4 = InceptionBlockB(768, 142, 71, [142, 142], [142, 213])
+        self.inception6_5 = InceptionBlockB(768, 106, 53, [106, 106], [106, 159])
+        self.inception_connect2 = InceptionBlockD(424, 424, 432)
+        self.inception7_1 = InceptionBlockC(1280, 320, 320, [320, 160], [320, 160])
+        self.inception7_2 = InceptionBlockC(1280, 512, 512, [512, 256], [512, 256])
+        self.avgpool = nn.AvgPool2d(kernel_size=8)
+        self.classifier = nn.Linear(2048, num_classes)
+    
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.pool1(x)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        x = self.conv6(x)
+        x = self.inception5_1(x)
+        x = self.inception5_2(x)
+        x = self.inception5_3(x)
+        x = self.inception_connect1(x)
+        x = self.inception6_1(x)
+        x = self.inception6_2(x)
+        x = self.inception6_3(x)
+        if self.training and self.aux_logits:
+            out_aux = self.aux_classifier(x)
+        x = self.inception6_4(x)
+        x = self.inception6_5(x)
+        x = self.inception_connect2(x)
+        x = self.inception7_1(x)
+        x = self.inception7_2(x)
+        x = self.avgpool(x)
+        out = self.classifier(x)
+        if self.training and self.aux_logits:
+            return out, out_aux
+        return out
