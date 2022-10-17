@@ -382,3 +382,135 @@ class InceptionV3(nn.Module):
         if self.training and self.aux_logits:
             return out, out_aux
         return out
+
+
+class Stem(nn.Module):
+    def __init__(self, in_channel=3):
+        super(Stem, self).__init__()
+        self.conv1 = BasicConv2d(in_channel, 32, kernel_size=3, stride=2)
+        self.conv2 = BasicConv2d(32, 32, kernel_size=3)
+        self.conv3 = BasicConv2d(32, 64, kernel_size=3, padding=1)
+        self.maxpool1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.conv4 = BasicConv2d(64, 96, kernel_size=3, stride=2)
+        self.block_left = nn.Sequential(
+            BasicConv2d(160, 64, kernel_size=1),
+            BasicConv2d(64, 96, kernel_size=3)
+        )
+        self.block_right = nn.Sequential(
+            BasicConv2d(160, 64, kernel_size=1),
+            BasicConv2d(64, 64, kernel_size=(7, 1), padding=(3, 0)),
+            BasicConv2d(64, 64, kernel_size=(1, 7), padding=(3, 0)),
+            BasicConv2d(64, 96, kernel_size=3)
+        )
+        self.conv6 = BasicConv2d(192, 192, kernel_size=3, stride=2)
+        self.maxpool2 = nn.MaxPool2d(kernel_size=3, stride=2)
+    
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x_pool1 = self.maxpool1(x)
+        x_conv4 = self.conv4(x)
+        x = torch.cat([x_pool1, x_conv4], dim=1)
+        x_block_left = self.block_left(x)
+        x_block_right = self.block_right(x)
+        x = torch.cat([x_block_left, x_block_right], dim=1)
+        x_pool2 = self.maxpool2(x)
+        x_conv6 = self.conv6(x)
+        x = torch.cat([x_conv6, x_pool2], dim=1)
+        return x
+
+
+class InceptionA(nn.Module):
+    def __init__(self, in_channel):
+        super(InceptionA, self).__init__()
+        self.block1 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, padding=1),
+            BasicConv2d(in_channel, 96, kernel_size=1)
+        )
+        self.block2 = BasicConv2d(in_channel, 96, kernel_size=1)
+        self.block3 = nn.Sequential(
+            BasicConv2d(in_channel, 64, kernel_size=1),
+            BasicConv2d(64, 96, kernel_size=3, padding=1)
+        )
+        self.block4 = nn.Sequential(
+            BasicConv2d(in_channel, 64, kernel_size=1),
+            BasicConv2d(64, 96, kernel_size=3, padding=1),
+            BasicConv2d(94, 94, kernel_size=3, padding=1)
+        )
+    
+    def forward(self, x):
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3 = self.block3(x)
+        out4 = self.block4(x)
+        out = torch.cat([out1, out2, out3, out4], dim=1)
+        return out
+
+
+class InceptionB(nn.Module):
+    def __init__(self, in_channel=1024):
+        super(InceptionB, self).__init__()
+        self.block1 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, padding=1),
+            BasicConv2d(in_channel, 128, kernel_size=1)
+        )
+        self.block2 = BasicConv2d(in_channel, 384, kernel_size=1)
+        self.block3 = nn.Sequential(
+            BasicConv2d(in_channel, 192, kernel_size=1),
+            BasicConv2d(192, 224, kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(224, 256, kernel_size=(1, 7), padding=(0, 3))
+        )
+        self.block4 = nn.Sequential(
+            BasicConv2d(in_channel, 192, kernel_size=1),
+            BasicConv2d(192, 192, kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(192, 224, kernel_size=(7, 1), padding=(3, 0)),
+            BasicConv2d(224, 224, kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(224, 256, kernel_size=(7, 1), padding=(3, 0))
+        )
+    
+    def forward(self, x):
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3 = self.block3(x)
+        out4 = self.block4(x)
+        out = torch.cat([out1, out2, out3, out4], dim=1)
+        return out
+
+
+class InceptionC(nn.Module):
+    def __init__(self, in_channel):
+        super(InceptionC, self).__init__()
+        self.block1 = nn.Sequential(
+            nn.AvgPool2d(kernel_size=3, padding=1),
+            BasicConv2d(in_channel, 256, kernel_size=1)
+        )
+        self.block2 = BasicConv2d(in_channel, 256, kernel_size=1)
+        self.block3_1x1 = BasicConv2d(in_channel, 384, kernel_size=1)
+        self.block3_1x3 = BasicConv2d(384, 256, kernel_size=(1, 3), padding=(0, 1))
+        self.block3_3x1 = BasicConv2d(384, 256, kernel_size=(3, 1), padding=(1, 0))
+        self.block4_bottle = nn.Sequential(
+            BasicConv2d(in_channel, 384, kernel_size=1),
+            BasicConv2d(384, 448, kernel_size=(1, 3), padding=(0, 1)),
+            BasicConv2d(448, 512, kernel_size=(3, 1), padding=(1, 0))
+        )
+        self.block4_3x1 = BasicConv2d(512, 256, kernel_size=(3, 1), padding=(1, 0))
+        self.block4_1x3 = BasicConv2d(512, 256, kernel_size=(1, 3), padding=(0, 1))
+    
+    def forward(self, x):
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3_1x1 = self.block3_1x1(x)
+        out3_1x3 = self.block3_1x3(out3_1x1)
+        out3_3x1 = self.block3_3x1(out3_1x1)
+        out4_bottle = self.block4_bottle(x)
+        out4_3x1 = self.block4_3x1(out4_bottle)
+        out4_1x3 = self.block4_1x3(out4_bottle)
+        out = torch.cat([out1, out2, out3_1x3, out3_3x1, out4_3x1, out4_1x3], dim=1)
+        return out
+
+
+class ReductionA(nn.Module):
+    def __init__(self):
+        super(ReductionA, self).__init__()
+        
