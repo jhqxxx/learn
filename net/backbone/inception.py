@@ -513,4 +513,110 @@ class InceptionC(nn.Module):
 class ReductionA(nn.Module):
     def __init__(self):
         super(ReductionA, self).__init__()
+        self.block1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.block2 = BasicConv2d(384, 384, kernel_size=3, stride=2)
+        self.block3 = nn.Sequential(
+            BasicConv2d(384, 192, kernel_size=1),
+            BasicConv2d(192, 224, kernel_size=3),
+            BasicConv2d(224, 256, kernel_size=3, stride=2)
+        )
+    
+    def forward(self, x):
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3 = self.block3(x)
+        out = torch.cat([out1, out2, out3], dim=1)
+        return out
+
+
+class ReductionB(nn.Module):
+    def __init__(self) -> None:
+        super(ReductionB, self).__init__()
+        self.block1 = nn.MaxPool2d(kernel_size=3, stride=2)
+        self.block2 = nn.Sequential(
+            BasicConv2d(1024, 192, kernel_size=1),
+            BasicConv2d(192, 192, kernel_size=3, stride=2)
+        )
+        self.block3 = nn.Sequential(
+            BasicConv2d(1024, 256, kernel_size=1),
+            BasicConv2d(256, 256, kernel_size=(1, 7), padding=(0, 3)),
+            BasicConv2d(256, 320, kernel_size=(7, 1), padding=(3, 0)),
+            BasicConv2d(320, 320, kernel_size=3, stride=2)
+        )
+    
+    def forward(self, x):
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3 = self.block3(x)
+        out = torch.cat([out1, out2, out3], dim=1)
+        return out
+
+
+class InceptionV4(nn.Module):
+    def __init__(self, num_classes) -> None:
+        super(InceptionV4, self).__init__()
+        self.stem = Stem(3)
+        self.inceptiona_block = nn.Sequential(
+            InceptionA(384),
+            InceptionA(384),
+            InceptionA(384),
+            InceptionA(384)
+        )
+        self.redactiona = ReductionA()
+        self.inceptionb_block = nn.Sequential(
+            InceptionB(1024),
+            InceptionB(1024),
+            InceptionB(1024),
+            InceptionB(1024),
+            InceptionB(1024),
+            InceptionB(1024),
+            InceptionB(1024)
+        )
+        self.reductionb = ReductionB()
+        self.inceptionc_block = nn.Sequential(
+            InceptionC(1536),
+            InceptionC(1536),
+            InceptionC(1536)
+        )
+        self.avgpool = nn.AvgPool2d(kernel_size=8)
+        self.dropout = nn.Dropout2d(0.8)
+        self.linear = nn.Linear(1536, num_classes)
+    
+    def forward(self, x):
+        x = self.stem(x)
+        x = self.inceptiona_block(x)
+        x = self.redactiona(x)
+        x = self.inceptionb_block(x)
+        x = self.reductionb(x)
+        x = self.inceptionc_block(x)
+        x = self.avgpool(x)
+        x = self.dropout(x)
+        x = self.linear(x)
+        return x
+
+
+class InceptionResNetA(nn.Module):
+    def __init__(self, in_channel) -> None:
+        super(InceptionResNetA, self).__init__()
+        self.block1 = BasicConv2d(in_channel, 32, kernel_size=1)
+        self.block2 = nn.Sequential(
+            BasicConv2d(in_channel, 32, kernel_size=1),
+            BasicConv2d(32, 32, kernel_size=3, padding=1)
+        )
+        self.block3 = nn.Sequential(
+            BasicConv2d(in_channel, 32, kernel_size=1),
+            BasicConv2d(32, 32, kernel_size=3, padding=1),
+            BasicConv2d(32, 32, kernel_size=3, padding=1)
+        )
+        self.block_concat = BasicConv2d(96, 256,kernel_size=1)
+    
+    def forward(self, x):
+        res_x = x
+        out1 = self.block1(x)
+        out2 = self.block2(x)
+        out3 = self.block3(x)
+        out_block = torch.cat([out1, out2, out3], dim=1)
+        out_block_concat = self.block_concat(out_block)
+        out = res_x + out_block_concat
+        return out
         
