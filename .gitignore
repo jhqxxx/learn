@@ -1,0 +1,3 @@
+yolo-series/runs
+*.pt
+*/*/target

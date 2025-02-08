@@ -1,0 +1,155 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# COCO 2017 dataset http://cocodataset.org by Microsoft
+# Example usage: yolo train data=coco.yaml
+# parent
+# ├── ultralytics
+# └── datasets
+#     └── coco  ← downloads here (20.1 GB)
+
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: D:\\dataset\\dogcat  # dataset root dir
+# train images (relative to 'path') 118287 images
+train:
+  - images/train
+#  - images/train/1
+#  - images/train/2
+#  - images/train/3
+# val images (relative to 'path') 5000 images
+val:
+  - images/val
+#  - images/val/1
+#  - images/val/2
+#  - images/val/3
+ # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+test: images/test
+
+nc: 60
+
+# Classes
+names:
+  0: Golden Retriever #金毛
+  1: Husky #哈士奇
+  2: Alaskan Malamute #阿拉斯加
+  3: Corgi #柯基
+  4: Bichon Frise #比熊
+  5: Yorkshire Terrier #约克夏
+  6: Chihuahua #吉娃娃
+  7: Basset Hound #巴吉度
+  8: Spotty Dog #斑点狗
+  9: Scottish Terrier #苏格兰梗
+  10: Pug # 巴哥
+  11: Tibetan Mastiff #藏獒
+  12: German Shepherd #德国牧羊犬
+  13: Poodle #贵宾犬
+  14: West Highland White Terrier #西高地白梗
+  15: Chinese Shar Pei #沙皮
+  16: Papillon #蝴蝶犬
+  17: Labrador #拉布拉多
+  18: Akita #秋田犬
+  19: Shiba Inu #柴犬
+  20: Shih Tzu #西施犬
+  21: Border Collie #边境牧羊犬
+  22: Samoyed #萨摩耶
+  23: Teddy #泰迪
+  24: Chow Chow #松狮犬
+  25: Deerhound #鹿犬
+  26: Great Dane #大丹犬
+  27: French Bulldog #法国斗牛犬
+  28: Saint Bernard #圣伯纳犬
+  29: Rottweiler #罗威纳犬
+  30: Cocker Spaniel #可卡犬
+  31: German Doberman Pinscher #杜宾犬
+  32: Old English Sheepdog #古牧
+  33: Schnauzer #雪纳瑞
+  34: Bedlington Terriern #贝灵顿猎犬
+  35: Pomeranian #博美犬
+  36: Dachshun #腊肠犬
+  37: Beagle #比格犬
+  38: Bull Terrier #牛头梗
+  39: Shetland Sheepdog #喜乐蒂
+  40: Chinese Rural Dog #中华田园犬
+  41: Chinese Hound #细犬
+  42: Pekingese #京巴
+  43: Tibetan Spaniel #西藏猎犬
+  44: Chinese Crested Dog #中国冠毛犬
+  45: American Shorthair #美短
+  46: British Shorthair #英短
+  47: Persian #波斯猫
+  48: Birman #伯曼猫
+  49: Norwegian Forest Cat #挪威森林猫
+  50: Ragdoll #布偶猫
+  51: Himalayan #喜马拉雅猫
+  52: Toyger #虎皮猫
+  53: Scottish fold #苏格兰折耳猫
+  54: Dragen Li #狸花猫
+  55: Sphynx #斯芬克斯猫(无毛猫)
+  56: Chinese Pastoral Cat #中华田园猫
+  57: Garfield #加菲猫
+  58: Blue Cat #蓝猫
+  59: Cow Cat #奶牛猫
+
+
+# Classes
+cn_names:
+  0: 金毛
+  1: 哈士奇
+  2: 阿拉斯加
+  3: 柯基
+  4: 比熊
+  5: 约克夏
+  6: 吉娃娃
+  7: 巴吉度
+  8: 斑点狗
+  9: 苏格兰梗
+  10:  巴哥
+  11: 藏獒
+  12: 德国牧羊犬
+  13: 贵宾犬
+  14: 西高地白梗
+  15: 沙皮
+  16: 蝴蝶犬
+  17: 拉布拉多
+  18: 秋田犬
+  19: 柴犬
+  20: 西施犬
+  21: 边境牧羊犬
+  22: 萨摩耶
+  23: 泰迪
+  24: 松狮犬
+  25: 鹿犬
+  26: 大丹犬
+  27: 法国斗牛犬
+  28: 圣伯纳犬
+  29: 罗威纳犬
+  30: 可卡犬
+  31: 杜宾犬
+  32: 古牧
+  33: 雪纳瑞
+  34: 贝灵顿猎犬
+  35: 博美犬
+  36: 腊肠犬
+  37: 比格犬
+  38: 牛头梗
+  39: 喜乐蒂
+  40: 中华田园犬
+  41: 细犬
+  42: 京巴
+  43: 西藏猎犬
+  44: 中国冠毛犬
+
+  45: 美短
+  46: 英短
+  47: 波斯猫
+  48: 伯曼猫
+  49: 挪威森林猫
+  50: 布偶猫
+  51: 喜马拉雅猫
+  52: 虎皮猫
+  53: 苏格兰折耳猫
+  54: 狸花猫
+  55: 斯芬克斯猫(无毛猫)
+  56: 中华田园猫
+  57: 加菲猫
+  58: 蓝猫
+  59: 奶牛猫

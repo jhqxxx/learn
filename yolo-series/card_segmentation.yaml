@@ -1,0 +1,6 @@
+path: D:\\data\\card-corner\\segmentation
+train: images/train
+val: images/val
+
+names:
+  0: card

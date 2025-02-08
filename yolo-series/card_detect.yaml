@@ -1,0 +1,9 @@
+path: D:\\data\\card-corner\\detect 
+
+train: images/train 
+val: images/val
+
+nc: 1
+
+names:   
+  0: card

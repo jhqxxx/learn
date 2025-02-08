@@ -1,0 +1,12 @@
+path: D:\\data\\card-corner\\point
+
+train: images/train
+val: images/val
+
+# 四种关键点，每个 关键点有 x y 是否可见 三个参数
+# 是否可见： 2-可见不遮挡， 1-遮挡， 0-没有点（该数据集标注时该参数没有明确标注，待优化）
+kpt_shape: [4, 3]
+
+# 框的类别（对于关键点检测，只有一类）
+names:
+  0: card
