@@ -3,8 +3,8 @@
  * @version: 
  * @Author: jhq
  * @Date: 2022-09-20 23:32:49
- * @LastEditors: jhq
- * @LastEditTime: 2022-09-21 23:20:31
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-03-03 16:43:55
 -->
 ### 卷积
 * 普通卷积：
@@ -55,8 +55,16 @@
     - 通过在卷积核元素之间插入空格来“扩张”卷积核，扩充参数取决于我们想如何扩大卷积核
     - 可扩大输入的感受野，而不增加kernel的尺寸
 
-* 转置卷积：  
+* 转置卷积/逆卷积：  
     逆向的卷积，要进行上采样
-    输入n*n, 填充p*p的0边缘，3*3的卷积核，stride=1, 输出为(n+2*p-k)/s+1
+    初始化输入的stride代表做正向卷积时的步长
+    输入n*n, 如果stride > 1,正向卷积时，卷积步长>1，生成的特征图(n+2*p-k)/s +1,变很小，所以反卷积时需要把正向跳过的步长补充上,则n=n+(stride-1)*(n-1)
+    逆卷积时，步长始终stride=1，kernel_size=输入数据，
+    padding=dilation*(kernel_size-1)-padding
 
 * 3D卷积定义为filter的深度小于输入层的深度（即卷积核的个数小于输入层通道数），3Dfilter需要在h,w,c三个维度上滑动
+
+Conv1D 2D 3D:这里的维度按照卷积核可移动的维度进行定义的
+    * Conv1D: 只沿着一个轴，一维CNN的输入和输出数据是二维的，主要用于时间序列数据。input: sequence_len*feature_dimension, kernel: 1维tensor，len=kernrl_size, 
+    * Conv2D: 在平面上沿两个轴滑动， 2D CNN的输入输出是3维的，主要用于图像数据
+    * Conv3D: 可以沿着3个方向移动(高，宽，及图像通道)， 3D CNN的输入输出数据是4维的，通常用于3D图像数据（MRI，CT）扫描

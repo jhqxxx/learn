@@ -3,8 +3,8 @@
  * @version: 
  * @Author: jhq
  * @Date: 2022-09-20 23:36:07
- * @LastEditors: jhq
- * @LastEditTime: 2022-09-21 23:26:18
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-03-20 18:13:33
 -->
 ### 激活函数
 * relu
@@ -84,4 +84,11 @@
 * SiLU:
     - f(x)=x*sigmoid(x)
 
+* GELU:
+    - f(x) = x * p(X<=x)
+    -      0.5*x*(1+Tanh(sqrt(2/pi)*(x+0.044715*x^3)))
+    - p(X<=x): 伯努利分布
+
+* H-swish：
+    f(x) = x*(ReLu6(x+3)/6)
 注意：在一般的二元分类问题中，tanh函数用于隐藏层，而sigmoid函数用于输出层，但不固定，可具体问题调整

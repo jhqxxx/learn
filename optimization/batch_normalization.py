@@ -3,8 +3,8 @@ Descripttion:
 version: 
 Author: jhq
 Date: 2022-09-20 22:22:06
-LastEditors: jhq
-LastEditTime: 2022-09-21 23:24:07
+LastEditors: Please set LastEditors
+LastEditTime: 2023-02-17 14:34:36
 '''
 from matplotlib.pyplot import axis
 import numpy as np
@@ -16,6 +16,7 @@ class BatchNormalization:
     作用：防止过拟合 | 加速收敛
     位置：Affine(仿射层，矩阵乘法，指全连接层)、convolution层后面
     原理：对数据的均值方差进行调整，加速训练收敛
+    测试时使用训练得到的average of μ和σ
     '''
 
     def __init__(self, gamma, beta, momentum=0.9, running_mean=None, running_var=None):
@@ -24,7 +25,7 @@ class BatchNormalization:
         self.momentum = momentum
         self.input_shape = None   # Conv层为4维， 全连接层为2维
 
-        # 测试是使用的平均值和方差
+        # 测试时使用的平均值和方差
         self.running_mean = running_mean
         self.running_var = running_var
 
