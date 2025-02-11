@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2024-01-28 17:23:30
- * @LastEditTime: 2024-03-04 22:14:02
+ * @LastEditTime: 2025-02-10 15:07:30
  * @Description: 
 -->
 ###### tips
@@ -64,18 +64,39 @@ rust通过所有权系统来管理内存
 ##### struct
 1. struct
 2. tuple struct
+* 类单元结构体，一个没有任何字段的结构体，常用在想要在某个类型上实现trait但不需要在类型中存储数据时。
 3. 方法 impl块定义
 4. 关联函数：在impl块里定义不把self作为第一个参数的函数，叫关联函数，常用于构造器
+* 加外部属性#[derive(Debug)]
+
 
 ##### 枚举 enum
-Option<T>
+enum Message {  
+    Quit, 
+    Move { x: i32, y: i32 }, 
+    Write(String), 
+    ChangeColor(i32, i32, i32), 
+}
+
+Option<T>:一个值要么有值要么没值
+enum Option<T> {  
+    None,
+    Some(T),
+}
 
 ##### match
+处理枚举的控制流结构
+other分支：匹配所有情况，必须放在最后
+_:可以匹配任意值，但不绑定到该值
 
-Package  
-Crate
-Module
-Path
+* if let:处理只匹配一个模式的值，而忽略其他模式的情况
+* if let和else:else块中的代码与match表达式中的_分支中的代码相同
+
+###### 模块
+Package:Cargo的一个功能，它允许你创建、测试和分享crate
+Crates:一个模块的树形结构，它形成了库或二进制项目
+Module和use:允许你控制作用域和路径私有性
+Path：一个命名如结构体、函数或模块等项的方式
 
 ##### 集合
 Vector v

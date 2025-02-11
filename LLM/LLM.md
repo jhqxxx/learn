@@ -1,3 +1,9 @@
+<!--
+ * @Author: jhq
+ * @Date: 2025-02-08 14:16:10
+ * @LastEditTime: 2025-02-08 14:41:45
+ * @Description: 
+-->
 * Retrieval Augmented Generation-RAG:检索增强生成,外部知识库数据抽取，喂给模型
 * Mixture of Experts-MoE:混合专家模型
 * Switchable Sparse Dense Learning-SSD:可切换稀疏稠密学习
@@ -33,3 +39,6 @@ Multi-Agent
 chat chain
 
 MiniCPM
+
+
+vllm安装
