@@ -1,18 +1,23 @@
 '''
 Author: jhq
 Date: 2025-01-08 15:51:22
-LastEditTime: 2025-01-08 16:24:06
+LastEditTime: 2025-02-14 12:24:31
 Description: 
 '''
 import os 
 import json 
 import numpy as np 
 from tqdm import tqdm  
-bbox_class = {     
-    "card": 0 
+# bbox_class = {     
+#     "card": 0 
+# }
+
+bbox_class = {          
+    "fire": 0,
+    "smoke": 1
 }
 
-Dataset_root = r"D:\data\card-corner\detect" 
+Dataset_root = r"D:\data\detection\fire\train" 
 labelme_path = os.path.join(Dataset_root, "labelme_detect") 
 txt_path = os.path.join(Dataset_root, "labels") 
 txt_train_path = os.path.join(txt_path, "train")

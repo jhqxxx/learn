@@ -1,4 +1,5 @@
 yolo-series/runs
+yolo-series/wandb
 *.pt
 */*/target
 .vscode

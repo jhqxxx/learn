@@ -1,0 +1,11 @@
+path: D:\\data\\detection\\fire\\train
+
+train: images/train 
+val: images/val
+test: images/test
+
+nc: 2
+
+names:   
+  0: fire 
+  1: smoke
