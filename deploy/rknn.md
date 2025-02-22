@@ -20,7 +20,7 @@
   2. 注意：
      - 修改 ultralytics/cfg/default.yaml 文件时
        - model:转换的模型路径
-       - batch：input batch size，转出的模型的输入维度[batch,3,640,640]与这个有关,改为 1
+       - batch：input batch size，转出的模型的输入维度[batch,3,640,640],改为 1
        - imgsz: 与训练时的 imgsz 一致，没改过默认为 640
 
 - onnx 转 rknn:使用 airockchip 提供的 rknn_model_zoo 中的转换脚本<https://github.com/airockchip/rknn_model_zoo>

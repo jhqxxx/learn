@@ -3,3 +3,7 @@ yolo-series/wandb
 *.pt
 */*/target
 .vscode
+LLM/cache
+LLM/exp*
+LLM/run
+LLM/*.json

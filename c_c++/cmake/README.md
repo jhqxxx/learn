@@ -99,3 +99,6 @@ CMake是一个编译工具，允许开发者编写一种平台无关的CmakeList
 
 ##### 变量说明
 * ${PROJECT_BINARY_DIR}:是cmake系统变量，执行cmake的目录，如果在build目录下，则这个变量指build目录
+
+##### 交叉编译
+cmake .. -DTARGET_SOC=rk3588 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_BUILD_TYPE=Release -DENABLE_ASAN=OFF -DDISABLE_RGA=OFF -DDISABLE_LIBJPEG=OFF -DCMAKE_INSTALL_PREFIX=../lib
