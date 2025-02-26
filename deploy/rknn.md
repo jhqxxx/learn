@@ -1,3 +1,9 @@
+<!--
+ * @Author: jhq
+ * @Date: 2025-02-17 13:13:40
+ * @LastEditTime: 2025-02-22 20:30:53
+ * @Description: 
+-->
 ##### rknn 部署自己训练的 yolo11n 目标检测模型
 
 ###### 在 PC 端
@@ -45,3 +51,5 @@
 - 拷贝 out.jpg 到 PC 端查看结果
 
 ###### cpp 直接在目标设备上编译，待测
+
+* rk3588查看npu使用率： cat /sys/kernel/debug/rknpu/load

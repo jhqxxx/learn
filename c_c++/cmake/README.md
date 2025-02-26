@@ -101,4 +101,8 @@ CMake是一个编译工具，允许开发者编写一种平台无关的CmakeList
 * ${PROJECT_BINARY_DIR}:是cmake系统变量，执行cmake的目录，如果在build目录下，则这个变量指build目录
 
 ##### 交叉编译
+export GCC_COMPILER=/home/wxg/jhq/code/about_rknn/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu
+export CC=${GCC_COMPILER}-gcc
+export CXX=${GCC_COMPILER}-g++
+
 cmake .. -DTARGET_SOC=rk3588 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_BUILD_TYPE=Release -DENABLE_ASAN=OFF -DDISABLE_RGA=OFF -DDISABLE_LIBJPEG=OFF -DCMAKE_INSTALL_PREFIX=../lib
