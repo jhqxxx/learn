@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:16:10
- * @LastEditTime: 2025-02-22 20:26:48
+ * @LastEditTime: 2025-02-26 11:43:51
  * @Description:
 -->
 
@@ -24,13 +24,43 @@
 
 ###### 模型微调
 
+- RLHF:Reinforcement Learning with Human Feedback:基于人类反馈的强化学习：
+  - supervised finetuning SFT:有监督微调
+  - 用偏好标签标注数据
+  - 基于偏好数据训练奖励模型
+  - RL 优化
+  - DPO 训练直接消灭了奖励建模和 RL 两个环节，直接根据标注好的偏好数据优化 DPO 目标
 - PEFT:parameter efficient fine-tuning 参数高效微调
+  - 固定预训练模型的大部分参数，仅调整模型的一小部分参数达到与全部参数的微调接近的效果，调整的可以是模型的参数，也可以时额外加入的一些参数
+  - 增加额外参数
+  - 选取一部分参数更新
+  - 引入重参数化
+  - LoRA:在模型的 Linear 层的旁边添加一个线性层，数据先降维到 r,这个 r 就是 LORA 的秩，然后再从 r 恢复到原始维度,在训练过程中，梯度计算量少了很多，所有可以在低显存的情况下训练大模型，但引入 LoRA 部分的参数，在推理阶段比原来的计算量大一点
+  - Prefix Tuning
+  - P-Tuning
+  - Prompt Tuning
 - QLoRA：低秩适应
+- DPOTrainer:Direct Preference Optimization
+  - 标注好的偏好数据需遵循特定的格式，是一个还有以下 3 个键的字典：
+  - prompt:推理时输入给模型的提示
+  - chosen:针对给定提示的较优回答
+  - rejected:针对给定提示的较劣回答或非给定提示的回答
+- PPO:Proximal Policy Optimization
+
+###### 模型生成
+- 生成配置？？？
+- 确定模型生成时是否有think过程，如果有的话，max_new_tokens设大一点，不然结果生成不完整
+
+###### 数据生成
+- 使用预训练模型根据不同prompt生成
+- 自己采集
 
 ###### 模型框架
 
 - Retrieval Augmented Generation-RAG:检索增强生成,外部知识库数据抽取，喂给模型
+    - 基于输入x,检索相关序列z，给定检索序列z和输入x，生成输出y
 - Mixture of Experts-MoE:混合专家模型
+    - 创建一组专家，每个都有自己的参数，将最终函数定义为专家的混合
 - Switchable Sparse Dense Learning-SSD:可切换稀疏稠密学习
 - Long Sequence:长文本
   - sparse attention:稀疏注意力
@@ -43,9 +73,32 @@
     1. Mamba
 - Scaling law:扩展规律
 
+GRPO-Group Relative Policy Optimization
+
 幻觉问题：错误回答
 
-RLHF
+Robot
+LeRobot
+ACT
+Diffusion Policy
+Pi0
+
+图像/视频/音频
+DiT
+Stable Diffusion XL-SDXL
+Flux
+IP-Adapter FaceID
+InstantID
+PhotoMarker
+Instant Style
+B-LoRA
+CogVideoX
+Mochi
+Allegro
+LTX Video
+LayoutLM
+Whisper
+XLS-R
 
 多模态
 ViT+LLM
@@ -65,12 +118,14 @@ chat chain
 
 MiniCPM
 
+whisper
+
 vllm 安装
 
 台湾大学李宏毅生成式人工智能课程链接：
 https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php
 
-1.  作业三问题记录： 1. bitsandbytes 包找不到 cuda 1. 报错如下：RuntimeError:
+1.  作业五问题记录： 1. bitsandbytes 包找不到 cuda 1. 报错如下：RuntimeError:
     CUDA Setup failed despite GPU being available. Please run the following command to get more information:
 
             python -m bitsandbytes
@@ -123,5 +178,3 @@ https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php
                 * 尝试浏览器下载，老是断，不太可行
             3. 使用国内镜像下载，参考<https://hf-mirror.com/>中方法2，有断点续传，停了接着上次的命令下载
             4. 下载后transformers加载模型直接指定模型所在路径、
-
-2.  作业四问题记录：

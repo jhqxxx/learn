@@ -1,8 +1,10 @@
 '''
 Author: jhq
 Date: 2025-02-20 13:19:47
-LastEditTime: 2025-02-22 16:06:40
+LastEditTime: 2025-02-26 12:47:34
 Description: 
+参考
+https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php 作业五
 '''
 import datasets
 import transformers
@@ -245,6 +247,7 @@ if from_ckpt:
 model = prepare_model_for_int8_training(model)
 
 # 使用 LoraConfig 配置 LORA 模型
+# TARGET_MODULES在这些参数矩阵的基础上增加矩阵分解的旁支
 config = LoraConfig(
     r=LORA_R,
     lora_alpha=LORA_ALPHA,
@@ -253,6 +256,7 @@ config = LoraConfig(
     bias="none",
     task_type="CAUSAL_LM",
 )
+# 模型加入peft策略，
 model = get_peft_model(model, config)
 
 # 將 tokenizer 的 padding token 設定為 0
