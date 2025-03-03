@@ -8,3 +8,4 @@ LLM/exp*
 LLM/run
 LLM/*.json
 */__pycache__
+*/*/__pycache__

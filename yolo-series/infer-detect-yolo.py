@@ -6,7 +6,7 @@ Description:
 '''
 from ultralytics import YOLO
 
-model = YOLO(r"D:\code\learn\yolo-series\runs\detect\train5\weights\best.pt")
+model = YOLO(r"C:\jhq\learn\yolo-series\runs\detect\train5\weights\best.pt")
 # results = model([r"D:\messy\img\gold-dog.jpg", r"D:\messy\img\xishi-dog.jpg"])
 # results = model([r"D:\messy\img\gold-dog.jpg", r"D:\messy\img\douniu-dog.jpg", r"D:\messy\img\xishi-dog.jpg"])
 results = model(r"D:\messy\img\gold-dog.jpg")

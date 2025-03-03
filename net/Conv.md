@@ -4,12 +4,14 @@
  * @Author: jhq
  * @Date: 2022-09-20 23:32:49
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-03-03 16:43:55
+ * @LastEditTime: 2025-03-01 17:01:53
 -->
 ### 卷积
 * 普通卷积：
     - 特征图Hin*Win*Din * 滤波器h*w*Din*Dout -> 输出Hout*Wout*Dout
     - 特征图大小i, kernei size=k, padding=p, stride=s,输出为：lower_bound((i+2p-k)/s)+1
+
+* 1x1卷积：跨通道交互与整合，升维/降维
 
 * 分组卷积：
     - 将filter分成n个组，每个组负责特征图的部分深度，再将各组结果concat。
@@ -68,3 +70,8 @@ Conv1D 2D 3D:这里的维度按照卷积核可移动的维度进行定义的
     * Conv1D: 只沿着一个轴，一维CNN的输入和输出数据是二维的，主要用于时间序列数据。input: sequence_len*feature_dimension, kernel: 1维tensor，len=kernrl_size, 
     * Conv2D: 在平面上沿两个轴滑动， 2D CNN的输入输出是3维的，主要用于图像数据
     * Conv3D: 可以沿着3个方向移动(高，宽，及图像通道)， 3D CNN的输入输出数据是4维的，通常用于3D图像数据（MRI，CT）扫描
+
+###### 池化
+* 平均池化
+* 最大池化
+* k-max池化

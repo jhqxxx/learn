@@ -1,9 +1,13 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:16:10
- * @LastEditTime: 2025-02-26 11:43:51
+ * @LastEditTime: 2025-02-27 12:09:36
  * @Description:
 -->
+
+###### RAGFlow
+- docker compose -f docker-compose.yml up -d
+
 
 ###### 量化
 
@@ -178,3 +182,7 @@ https://speech.ee.ntu.edu.tw/~hylee/genai/2024-spring.php
                 * 尝试浏览器下载，老是断，不太可行
             3. 使用国内镜像下载，参考<https://hf-mirror.com/>中方法2，有断点续传，停了接着上次的命令下载
             4. 下载后transformers加载模型直接指定模型所在路径、
+
+
+
+docker访问需要设置环境变量：OLLAMA_HOST 0.0.0.0:11434
