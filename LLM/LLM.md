@@ -1,16 +1,20 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:16:10
- * @LastEditTime: 2025-02-27 12:09:36
+ * @LastEditTime: 2025-03-03 17:12:03
  * @Description:
 -->
 
-###### RAGFlow
-- docker compose -f docker-compose.yml up -d
+
 
 
 ###### 量化
-
+- r = Round(S*(q-Z))
+  - q: 原始值
+  - Z: 偏移量，又叫零点
+  - S: 缩放因子
+  - r: 量化后的值
+- int8量化通过映射关系将输入数据映射到[-128,127]
 - 参考<https://huggingface.co/blog/zh/hf-bitsandbytes-integration>
 - 参考<https://www.cnblogs.com/huggingface/p/17816374.html>
 - 模型大小由其参数量及其精度决定，精度通常为 float32、float16、bfloat16 之一

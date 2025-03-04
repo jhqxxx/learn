@@ -1,6 +1,7 @@
 yolo-series/runs
 yolo-series/wandb
 *.pt
+*.onnx
 */*/target
 .vscode
 LLM/cache

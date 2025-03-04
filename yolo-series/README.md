@@ -1,13 +1,20 @@
 <!--
  * @Author: jhq
  * @Date: 2025-01-03 16:52:22
- * @LastEditTime: 2025-02-05 13:36:42
+ * @LastEditTime: 2025-03-03 16:06:19
  * @Description: 
 
 -->
 #### detect
 使用猫狗数据集测试
 60个类别,每个类别150张图
+
+
+##### 12
+* A2C2f
+* ABlock
+* AAttn
+
 ##### yolov11-n
 * train: mAP50-0.846,mAP50:95-0.766
 * time: 4.5 hours
