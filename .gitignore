@@ -8,5 +8,6 @@ LLM/cache
 LLM/exp*
 LLM/run
 LLM/*.json
+LLM/transformers/test_trainer
 */__pycache__
 */*/__pycache__

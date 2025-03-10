@@ -1,24 +1,14 @@
 '''
 Author: jhq
 Date: 2025-03-04 18:27:40
-LastEditTime: 2025-03-04 18:29:56
+LastEditTime: 2025-03-05 19:11:12
 Description: 
 '''
-from langchain_deepseek import ChatDeepSeek
-
-llm = ChatDeepSeek(
-    model="C:/jhq/huggingface_model/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-    temperature=0,
-    max_tokens=None,
-    timeout=None,
-    max_retries=2,
-    # api_key="...",
-    # other params...
-)
+from LangChainLLM import DeepSeek_R1_Distill_Qwen_LLM
 
 
-messages = [
-    ("system", "You are a helpful translator. Translate the user sentence to French."),
-    ("human", "I love programming."),
-]
-llm.invoke(messages)
+llm = DeepSeek_R1_Distill_Qwen_LLM(mode_name_or_path = "C:/jhq/huggingface_model/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B")
+
+response = llm.invoke("我如何为学习大模型制定目标？")
+print(f"{"-"*20}回答{"-"*20}")
+print(response) # 输出回答

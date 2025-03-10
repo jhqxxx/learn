@@ -1,10 +1,32 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:16:10
- * @LastEditTime: 2025-03-03 17:12:03
+ * @LastEditTime: 2025-03-09 12:18:36
  * @Description:
 -->
 
+
+
+* huggingface下载
+  - $env:HF_ENDPOINT = "https://hf-mirror.com"
+  - huggingface-cli download --resume-download Ransaka/gpt2-tokenizer-fast --local-dir ./Ransake
+
+###### 强化算法
+* GRPO-Group Relative Policy Optimization/组相对策略优化
+  - 通过组内相对奖励来优化策略模型，而不是依赖传统的批评模型
+  - GRPO会在每个状态下采样一组动作，然后根据这些动作的相对表现来调整策略，而不是依赖一个单独的价值网络来估计每个动作的价值
+  - 优势：
+    - 减少计算负担
+    - 提高训练稳定性
+    - 增强策略更新的可控性
+
+* DPO: Direct Preference Optimization/直接偏好优化
+  - 直接使用人类偏好数据进行模型优化
+
+* PPO: Proximal Policy Optimization/近端策略优化
+  - 需要维护一个与策略模型大小相当的价值网络来估计优势函数，这在大模型场景下会导致显著的内存占用和计算代价
+
+* Reward model: 奖励模型
 
 
 
@@ -21,14 +43,28 @@
 - 理想情况下训练和推理都应该在 FP32 中完成，但 FP32 比 FP16/BF16 慢两倍,因此实践中常常使用混合精度方法，其中使用 FP32 权重作为精确的主权重，
   而使用 FP16/BF16 权重进行前向和后向传播计算以提高训练速度，最后在梯度更新阶段再使用 FP16/BF16 梯度更新 FP32 主权重。
 - 使用低精度，推理结果质量也下降了
-- 引入 8 位量化-1 字节，量化过程是从一种数据类型舍入到另一种数据类型，量化是一个有噪过程，会导致信息丢失，是一种有损压缩
+- 引入 8 位量化/1 字节，量化过程是从一种数据类型舍入到另一种数据类型，量化是一个有噪过程，会导致信息丢失，是一种有损压缩
   - 零点量化
   - 最大绝对值量化
   - 他们都将浮点值映射为更紧凑的 Int8 值
 - LLM.int8(): 性能下降是由离群特征引起的，使用自定义阈值提取离群值，并将矩阵分解为两部分，离群部分用 FP16 表示
+- NF4-4bit-NormalFloat
 - FP8
 - FP4
 - QLoRA: 使用 4bit 量化来压缩预训练模型，冻结基础模型参数，并将相对少量的可训练参数以低秩适配器的形式添加到模型中
+- 加载模型时使用量化配置在每次加载模型时进行量化，加载时非常耗时
+- 预量化：直接保存量化后的模型，使用时直接加载
+  - GPTQ：Post-Training Quantization for GPT models,训练后量化，关注GPU推理和性能
+    - pip install optimum
+    - pip install auto-gptq
+  - AWQ：Activation-aware Quantization,激活感知权重量化
+    - 假设并非所有权重对LLM的性能都同等重要
+    - 量化过程中会跳过一小部分权重，减轻量化损失
+    - pip install autoawq
+  - GGUF/GGML：GPT-Generated Unified Format,允许用户CPU来运行LLM，但也可以将其某些层加载到GPU以提高速度
+    - pip install ctransformers
+
+
 
 ###### 模型微调
 
