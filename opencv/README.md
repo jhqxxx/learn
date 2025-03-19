@@ -1,8 +1,24 @@
 <!--
  * @Author: jhq
  * @Date: 2025-01-17 14:28:34
- * @LastEditTime: 2025-01-17 14:28:41
- * @Description: 
+ * @LastEditTime: 2025-03-14 23:31:24
+ * @Description:
 -->
+
 ##### 函数介绍
-* Mat::total()：返回数组(如果数组表示图像则为像素数)的元素个数
+
+- Mat::total()：返回数组(如果数组表示图像则为像素数)的元素个数
+
+交叉编译 opencv：
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_C_COMPILER=/home/wxg/jhq/code/about_rknn/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc -D CMAKE_CXX_COMPILER=/home/wxg/jhq/code/about_rknn/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-g++ -D BUILD_SHARED_LIBS=OFF -D CMAKE_CXX_FLAGS=-fPIC -D CMAKE_C_FLAGS=-fPIC -D CMAKE_EXE_LINKER_FLAGS="-lpthread -ldl" -D ENABLE_PIC=OFF -D WITH_1394=OFF -D WITH_ARAVIS=OFF -D WITH_ARITH_DEC=ON -D WITH_ARITH_ENC=ON -D WITH_CLP=OFF -D WITH_CUBLAS=OFF -D WITH_CUDA=OFF -D WITH_CUFFT=OFF -D WITH_FFMPEG=OFF -D WITH_GSTREAMER=ON -D WITH_GSTREAMER_0_10=OFF -D WITH_HALIDE=OFF -D WITH_HPX=OFF -D WITH_IMGCODEC_HDR=ON -D WITH_IMGCODEC_PXM=ON -D WITH_IMGCODEC_SUNRASTER=ON -D WITH_INF_ENGINE=OFF -D WITH_IPP=OFF -D WITH_ITT=OFF -D WITH_JASPER=ON -D WITH_JPEG=ON -D WITH_LAPACK=ON -D WITH_LIBREALSENSE=OFF -D WITH_NVCUVID=OFF -D WITH_OPENCL=OFF -D WITH_OPENCLAMDBLAS=OFF -D WITH_OPENCLAMDFFT=OFF -D WITH_OPENCL_SVM=OFF -D WITH_OPENEXR=OFF -D WITH_OPENGL=OFF -D WITH_OPENMP=OFF -D WITH_OPENNNI=OFF -D WITH_OPENNNI2=OFF -D WITH_OPENVX=OFF -D WITH_PNG=ON -D WITH_PROTOBUF=OFF -D WITH_PTHREADS_PF=ON -D WITH_PVAPI=OFF -D WITH_QT=OFF -D WITH_QUIRC=OFF -D WITH_TBB=OFF -D WITH_TIFF=ON -D WITH_VULKAN=OFF -D WITH_WEBP=ON -D WITH_XIMEA=OFF -D BUILD_JAVA=OFF -D BUILD_opencv_python3=OFF -D CMAKE_INSTALL_PREFIX=../../install/aarch64 -D WITH_GTK=OFF -D WITH_EIGEN=OFF -D OPENCV_EXTRA_MODULES_PATH="../../../opencv_contrib/modules" -D BUILD_ZLIB=ON -D ZLIB_INCLUDE_DIR="../../3rdparty/zlib" -D OPENCV_GENERATE_PKGCONFIG=ON ../..
+报错：
+../../3rdparty/lib/liblibpng.a(pngrutil.c.o): In function `png_read_filter_row':
+pngrutil.c:(.text.png_read_filter_row+0xb0): undefined reference to `png_init_filter_functions_neon'
+../../3rdparty/lib/liblibpng.a(pngrtran.c.o): In function `png_do_read_transformations':
+pngrtran.c:(.text.png_do_read_transformations+0x1294): undefined reference to `png_do_expand_palette_rgba8_neon'
+pngrtran.c:(.text.png_do_read_transformations+0x13ec): undefined reference to `png_riffle_palette_neon'
+pngrtran.c:(.text.png_do_read_transformations+0x3758): undefined reference to `png_do_expand_palette_rgb8_neon'
+
+解决方法：
+添加-D CMAKE_SYSTEM_NAME=Linux -D CMAKE_SYSTEM_PROCESSOR=aarch64 配置
+cmake -D TARGET_SOC=rk3588 -D CMAKE_SYSTEM_NAME=Linux -D CMAKE_SYSTEM_PROCESSOR=aarch64 -D CMAKE_BUILD_TYPE=Release -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_C_COMPILER=/home/wxg/jhq/code/about_rknn/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc -D CMAKE_CXX_COMPILER=/home/wxg/jhq/code/about_rknn/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-g++ -D BUILD_SHARED_LIBS=OFF -D CMAKE_CXX_FLAGS=-fPIC -D CMAKE_C_FLAGS=-fPIC -D CMAKE_EXE_LINKER_FLAGS="-lpthread -ldl" -D ENABLE_PIC=OFF -D WITH_1394=OFF -D WITH_ARAVIS=OFF -D WITH_ARITH_DEC=ON -D WITH_ARITH_ENC=ON -D WITH_CLP=OFF -D WITH_CUBLAS=OFF -D WITH_CUDA=OFF -D WITH_CUFFT=OFF -D WITH_FFMPEG=OFF -D WITH_GSTREAMER=ON -D WITH_GSTREAMER_0_10=OFF -D WITH_HALIDE=OFF -D WITH_HPX=OFF -D WITH_IMGCODEC_HDR=ON -D WITH_IMGCODEC_PXM=ON -D WITH_IMGCODEC_SUNRASTER=ON -D WITH_INF_ENGINE=OFF -D WITH_IPP=OFF -D WITH_ITT=OFF -D WITH_JASPER=ON -D WITH_JPEG=ON -D WITH_LAPACK=ON -D WITH_LIBREALSENSE=OFF -D WITH_NVCUVID=OFF -D WITH_OPENCL=OFF -D WITH_OPENCLAMDBLAS=OFF -D WITH_OPENCLAMDFFT=OFF -D WITH_OPENCL_SVM=OFF -D WITH_OPENEXR=OFF -D WITH_OPENGL=OFF -D WITH_OPENMP=OFF -D WITH_OPENNNI=OFF -D WITH_OPENNNI2=OFF -D WITH_OPENVX=OFF -D WITH_PNG=ON -D WITH_PROTOBUF=OFF -D WITH_PTHREADS_PF=ON -D WITH_PVAPI=OFF -D WITH_QT=OFF -D WITH_QUIRC=OFF -D WITH_TBB=OFF -D WITH_TIFF=ON -D WITH_VULKAN=OFF -D WITH_WEBP=ON -D WITH_XIMEA=OFF -D BUILD_JAVA=OFF -D BUILD_opencv_python3=OFF -D CMAKE_INSTALL_PREFIX=../../install/aarch64 -D WITH_GTK=OFF -D WITH_EIGEN=OFF -D OPENCV_EXTRA_MODULES_PATH="../../../opencv_contrib/modules" -D BUILD_ZLIB=ON -D ZLIB_INCLUDE_DIR="../../3rdparty/zlib" -D OPENCV_GENERATE_PKGCONFIG=ON ../..

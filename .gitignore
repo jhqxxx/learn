@@ -14,3 +14,4 @@ LLM/transformers/test_trainer
 */ML-LHY/ML*
 */ML-LHY/*.json
 */ML-LHY/*.txt
+diffusion/ddpm-*

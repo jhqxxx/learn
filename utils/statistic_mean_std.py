@@ -1,19 +1,21 @@
 '''
 Author: jhq
 Date: 2022-11-23 12:28:03
-LastEditTime: 2022-11-23 13:14:03
+LastEditTime: 2025-03-16 20:26:21
 Description: 
 '''
 import os
 import glob
 from PIL import Image
 import numpy as np
+import random
 
-data_path = r"D:\data\garden_staff"
-train_files = glob.glob(os.path.join(data_path, 'train', '*', '*.jpg'))
+data_path = r"D:\dataset\diffusion-anime-face\anime-faces64x64\val"
+img_list = os.listdir(data_path)
+random.shuffle(img_list)
 result = []
-for file in train_files:
-    img = Image.open(file).convert('RGB')
+for file in img_list[:5000]:
+    img = Image.open(os.path.join(data_path, file)).convert('RGB')
     img = np.array(img).astype(np.uint8)
     img = img/255.
     result.append(img)
