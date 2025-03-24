@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:11:35
- * @LastEditTime: 2025-03-02 19:24:39
+ * @LastEditTime: 2025-03-20 16:35:36
  * @Description: ###
 -->
 
@@ -13,7 +13,7 @@
   - new_learning_rate = last_learning_rate \* gamma
   - gamma: 衰减系数
 - 自然指数衰减-natural exponential decay
-  - new_learning_rate = last_learning_rate _ e^(-gamma _ epoch)
+  - new*learning_rate = last_learning_rate * e^(-gamma \_ epoch)
   - gamma: 衰减率
 - 多项式衰减-polynomial decay
   - cycle:学习率下降后是否会重新上升
@@ -39,26 +39,32 @@
 ###### 注意力机制
 
 ###### 正则化 regularization
-* 减少过拟合
-* 数据增强
-* 正则化代价函数 θ=argminθ*(1/N)∑i=1N(L(y^i,y)+λR(w))
-* L1正则化:RL2(w)=||w||2^2
-* L2正则化:RL2(w)=||w||1
-* dropout:随机丢弃一些神经元，防止过拟合
-* 早停法
+
+- 减少过拟合
+- 数据增强
+- 正则化代价函数 θ=argminθ\*(1/N)∑i=1N(L(y^i,y)+λR(w))
+- L1 正则化:RL2(w)=||w||2^2
+- L2 正则化:RL2(w)=||w||1
+- dropout:随机丢弃一些神经元，防止过拟合
+- 早停法
 
 ###### batch size
 
 ###### 归一化 normalization
-* 将数据处理为某个分布之间的数，如[0,1],[-1,1]
-* 标准化 standardization：z-score 归一化 (x-mean)/std
-* 输入归一化
-* 层归一化：对网络中间层的整个输入数据进行归一化
-* 批量归一化：在小批量中独立的归一化每个特征
 
-
-
-
+- 将数据处理为某个分布之间的数，如[0,1],[-1,1]
+- 标准化 standardization：z-score 归一化 (x-mean)/std
+- 输入归一化
+- 层归一化：对网络中间层的整个输入数据进行归一化
+  - 
+- 批量归一化：在小批量中进行归一化，归一化成标准正态分布
+  - 计算样本的均值
+  - 计算样本的方差
+  - 对每个样本的值减去均值再除以标准差，分母加上极小量避免分母为 0
+  - 缺点：
+    - 当显存有限，batch 较小时，batch norm 计算的均值和方差不能反映全局的统计分布信息，从而导致效果变差
+    - 对于在时间维度展开的 RNN，不同句子的分布大概率不同，batchnorm会失去意义
+    - 应用batchnorm，每个step都需要保存和计算batch统计量
 
 #### 行为识别
 

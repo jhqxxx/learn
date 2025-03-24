@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-03-17 21:40:05
-LastEditTime: 2025-03-19 12:09:54
+LastEditTime: 2025-03-19 14:54:11
 Description: 
 '''
 from dataclasses import dataclass
@@ -23,17 +23,17 @@ import glob
 
 @dataclass
 class TrainingConfig:
-    image_size = 64  # the generated image resolution
-    train_batch_size = 32
+    image_size = 256  # the generated image resolution
+    train_batch_size = 8
     eval_batch_size = 16  # how many images to sample during evaluation
     num_epochs = 100
     gradient_accumulation_steps = 1
     learning_rate = 1e-4
     lr_warmup_steps = 500
-    save_image_epochs = 10
-    save_model_epochs = 30
+    save_image_epochs = 5
+    save_model_epochs = 5
     mixed_precision = "fp16"  # `no` for float32, `fp16` for automatic mixed precision
-    output_dir = "ddpm-anime-faces-96"  # the model name locally and on the HF Hub
+    output_dir = "ddpm-anime-faces-256"  # the model name locally and on the HF Hub
 
     push_to_hub = False  # whether to upload the saved model to the HF Hub
     # hub_model_id = "<your-username>/<my-awesome-model>"  # the name of the repository to create on the HF Hub
@@ -44,7 +44,7 @@ class TrainingConfig:
 
 config = TrainingConfig()
 dataset = load_dataset(
-    "imagefolder", data_dir=r"D:\dataset\diffusion-anime-face\lhy-faces-96")
+    "imagefolder", data_dir=r"D:\dataset\diffusion-anime-face\faces256x256")
 # fig, axs = plt.subplots(1, 4, figsize=(16, 8))
 # for i, image in enumerate(dataset['train'][:4]['image']):
 #     axs[i].imshow(image)
@@ -53,7 +53,7 @@ dataset = load_dataset(
 
 
 # dataset['train'] = dataset['train'].shuffle(seed=config.seed).select(range(0, 10000))
-dataset['train'] = dataset['train'].select(range(0, 10000))
+# dataset['train'] = dataset['train'].select(range(0, 10000))
 
 preprocess = transforms.Compose(
     [
@@ -78,7 +78,7 @@ model = UNet2DModel(
     sample_size=config.image_size,
     in_channels=3,
     out_channels=3,
-    layers_per_block=2,
+    layers_per_block=1,
     block_out_channels=(128, 256, 512, 512),
     down_block_types=(
         "DownBlock2D",
@@ -116,7 +116,6 @@ lr_scheduler = get_cosine_schedule_with_warmup(
     num_warmup_steps=config.lr_warmup_steps,
     num_training_steps=config.num_epochs * len(train_dataloader),
 )
-
 
 def evaluate(config, epoch, pipeline):
     images = pipeline(
