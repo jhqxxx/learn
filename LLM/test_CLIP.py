@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-03-21 14:32:03
-LastEditTime: 2025-03-22 15:59:18
+LastEditTime: 2025-03-26 13:53:35
 Description: 
 '''
 import torch
@@ -33,5 +33,5 @@ with torch.no_grad():
     # image_features3 = model.get_image_features(**inputs3)
 
 # 打印图像特征
-print(image_features1.shape)
-np.savetxt("data.txt", image_features1.numpy())
+print(image_features1)
+# np.savetxt("data.txt", image_features1.numpy())

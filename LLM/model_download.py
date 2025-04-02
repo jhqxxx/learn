@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-02-24 17:33:48
-LastEditTime: 2025-03-22 14:11:08
+LastEditTime: 2025-03-27 14:02:25
 Description: 
 '''
 from modelscope import snapshot_download, AutoModel, AutoTokenizer
@@ -15,9 +15,10 @@ import kagglehub
 
 # print("Path to dataset files:", path)
 
-# model_dir = snapshot_download('maple775885/RMBG-2.0',
-#                               cache_dir='C:/jhq/huggingface_model', revision='master')
-dataset = MsDataset.load("AI-ModelScope/TinyStories", cache_dir=r"C:/jhq/huggingface_dataset", trust_remote_code=True)
+model_dir = snapshot_download('jinaai/jina-embeddings-v2-base-zh',
+                              cache_dir='C:/jhq/huggingface_model', revision='master')
+# ds = MsDataset.load('AI-ModelScope/webnovel_cn', split='train', download_mode=DownloadMode.FORCE_REDOWNLOAD) 
+# dataset = MsDataset.load("AI-ModelScope/TinyStories", cache_dir=r"C:/jhq/huggingface_dataset", trust_remote_code=True)
 # ds =  MsDataset.load('fimine/anime_dataset', subset_name='default', split='train')
 # snapshot_download('iic/CosyVoice-300M', local_dir='C:/jhq/huggingface_model/iic/CosyVoice-300M')
 # snapshot_download('iic/CosyVoice-300M-25Hz', local_dir='C:/jhq/huggingface_model/iic/CosyVoice-300M-25Hz')

@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:11:35
- * @LastEditTime: 2025-03-20 16:35:36
+ * @LastEditTime: 2025-03-24 17:38:50
  * @Description: ###
 -->
 
@@ -65,7 +65,10 @@
     - 当显存有限，batch 较小时，batch norm 计算的均值和方差不能反映全局的统计分布信息，从而导致效果变差
     - 对于在时间维度展开的 RNN，不同句子的分布大概率不同，batchnorm会失去意义
     - 应用batchnorm，每个step都需要保存和计算batch统计量
-
+- RMSNorm:
+  - 基于LN改进，只缩放，不做中心化操作
+  - RMSNorm(x)=x/sqrt(1/dim * ∑i=(x^2_i)) * gamma
+  - gamma: 可训练的参数
 #### 行为识别
 
 https://zhuanlan.zhihu.com/p/103566134

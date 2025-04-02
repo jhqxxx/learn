@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:15:50
- * @LastEditTime: 2025-03-22 19:51:52
+ * @LastEditTime: 2025-03-26 12:01:10
  * @Description:
 -->
 
@@ -45,3 +45,12 @@
   - 解决：libtorch 加环境变量
     - export LIBTORCH_DIR="/home/jhq/depends/libtorch"
     - export LD_LIBRARY_PATH=$LIBTORCH_DIR/lib:$LD_LIBRARY_PATH
+
+torch.rsqrt() -> 对元素取平方根后再取倒数
+
+* nn.Embedding(num_embeddings, embedding_dim, padding_idx=None, max_norm=None, norm_type=2.0, scale_grad_by_freq=False, sparse=False, _weight=None)
+  - num_embeddings: 词表大小
+  - embedding_dim: 词向量维度
+  - 将输入的整数索引转换为对应的词向量
+  - tokenizer定义了词表大小后，每个单词就转换成立为一个索引
+  - 再使用Embedding将索引转换为对应的词向量
