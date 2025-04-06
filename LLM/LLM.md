@@ -1,11 +1,20 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:16:10
- * @LastEditTime: 2025-03-09 12:18:36
+ * @LastEditTime: 2025-04-05 13:16:56
  * @Description:
 -->
 
+* temperature: 温度，控制随机性，值越大，随机性越大，值越小，随机性越小
+  - qi = e^(zi/T)/sum(e^(zi/T))
+  - 与softmax的区别：e的指数部分zi/T
+  - 当T越大，输出概率分布趋于均匀分布
 
+* 解码策略：如何从概率分布中选择下一个单词，也叫采样策略
+  - 贪心策略：取概率最大的Top1样本作为候选项
+  - Top-K: 取前k个样本作为候选项，
+  - Top-p: 设定阈值p，根据候选集累计概率和达到阈值p，来选择候选个数，也叫核采样
+    - 都从累计概率超过阈值p的token集合中进行随机采样
 
 * huggingface下载
   - $env:HF_ENDPOINT = "https://hf-mirror.com"

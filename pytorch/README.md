@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:15:50
- * @LastEditTime: 2025-03-26 12:01:10
+ * @LastEditTime: 2025-04-05 14:01:36
  * @Description:
 -->
 
@@ -46,7 +46,8 @@
     - export LIBTORCH_DIR="/home/jhq/depends/libtorch"
     - export LD_LIBRARY_PATH=$LIBTORCH_DIR/lib:$LD_LIBRARY_PATH
 
-torch.rsqrt() -> 对元素取平方根后再取倒数
+- torch.rsqrt() -> 对元素取平方根后再取倒数
+  - 1/torch.sqrt()
 
 * nn.Embedding(num_embeddings, embedding_dim, padding_idx=None, max_norm=None, norm_type=2.0, scale_grad_by_freq=False, sparse=False, _weight=None)
   - num_embeddings: 词表大小
@@ -54,3 +55,20 @@ torch.rsqrt() -> 对元素取平方根后再取倒数
   - 将输入的整数索引转换为对应的词向量
   - tokenizer定义了词表大小后，每个单词就转换成立为一个索引
   - 再使用Embedding将索引转换为对应的词向量
+
+* torch.outer(input, vec2):计算两个向量外积-input^T*vec2
+
+* torch.polar(abs, angle): 将绝对值和角度转换为复数
+  - out = abs*cos(angle) + abs*sin(angle)*j
+
+* tensor.ndim: tensor.dim()的别名，返回张量维度数量
+  - [4, 5, 6] -> 3
+
+* torch.view_as_complex：将实数张量转换为复数张量
+* torch.view_as_real(): 将复数张量转换为实数张量
+
+* torch.repeat_interleave(input, repeats, dim=None): 重复输入张量，在指定维度插入重复的元素
+* torch.cumsum(input, dim, dtype=None): 对输入张量进行累计操作，返回新张量的每个元素都是原张量中对应位置及之前所有元素的累加和
+
+* torch.multinomial(): 多项式采样，从一个概率分布中，采样n个样本的index
+* torch.gather(input, dim, index): 从输入张量中，根据索引获取对应位置的元素
