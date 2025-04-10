@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-02-24 17:33:48
-LastEditTime: 2025-03-27 14:02:25
+LastEditTime: 2025-04-07 16:28:51
 Description: 
 '''
 from modelscope import snapshot_download, AutoModel, AutoTokenizer
@@ -15,7 +15,7 @@ import kagglehub
 
 # print("Path to dataset files:", path)
 
-model_dir = snapshot_download('jinaai/jina-embeddings-v2-base-zh',
+model_dir = snapshot_download('LLM-Research/Llama-3.2-1B-Instruct',
                               cache_dir='C:/jhq/huggingface_model', revision='master')
 # ds = MsDataset.load('AI-ModelScope/webnovel_cn', split='train', download_mode=DownloadMode.FORCE_REDOWNLOAD) 
 # dataset = MsDataset.load("AI-ModelScope/TinyStories", cache_dir=r"C:/jhq/huggingface_dataset", trust_remote_code=True)

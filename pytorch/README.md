@@ -72,3 +72,5 @@
 
 * torch.multinomial(): 多项式采样，从一个概率分布中，采样n个样本的index
 * torch.gather(input, dim, index): 从输入张量中，根据索引获取对应位置的元素
+* tensor.detach()
+  返回一个新的tensor，从当前计算图中分离下来的，但是仍指向原变量的存放位置,不同之处只是requires_grad为false

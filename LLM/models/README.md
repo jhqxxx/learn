@@ -147,8 +147,8 @@
 
 * RAG
     - 基本结构
-        - 向量化模块，将文档片段向量化
         - 文档加载和切分的模块，加载文档并切分成文档片段
+        - 向量化模块，将文档片段向量化
         - 数据库模块，存放文档片段和对应的向量表示
         - 检索模块，根据query检索相关的文档片段
         - LLM模块，根据检索出来的文档回答用户问题
@@ -166,6 +166,143 @@
             - 欧几里得距离
             - 曼哈顿距离
         - 生成
+    - 优化方法
+        - 根据语义分块文档
+            - 先用普通方法分块文档-固定大小或特定符号分块
+            - 计算文档块embedding
+            - 计算相邻文档块embedding之间的相似度
+            - 如果相似度满足条件
+            - 将满足条件的文档合并为一个块
+        - 测试不同大小的文档块效果，选择效果最好的文档块size
+        - 上下文增强：查找到最匹配的文档块后，返回该块及其邻居块的内容
+        - contextual chunk headers: 给文档块添加标题内容
+            - 使用llm给文档块生成标题
+            - prompt: Generate a concise and informative title for the given text
+            - {"header": "...", "content": "..."}
+            - {"header_embedding": "...", "content_embedding": "..."}
+            - 如何表示header和content的对应关系
+            - 查询时，query与[header_embedding, content_embedding]都计算相似性
+            - 生成时将header和content拼接放到prompt中
+        - 文档增强-给文档块生成问题
+            - 使用llm给文档块生成问题
+            - prompt: Based on the following text, generate {num_questions} different questions that can be answered using only this text
+            - 如何表示questions和content的对应关系
+            - 查询时，query与question_embedding, content_embedding都计算相似性，
+            - 生成时，(referenced by question 'question'：'content')放到prompt中
+        
+        - query transformation-查询变换:
+            - query rewriting:让查询更具体更详细
+                - 使用llm生成更详细的query
+                - system prompt: "You are an AI assistant specialized in improving search queries. Your task is to rewrite user queries to be more specific, detailed, and likely to retrieve relevant information."
+                - user prompt: user_prompt = f"""
+                    Rewrite the following query to make it more specific and detailed. Include relevant terms and concepts that might help in retrieving accurate information.
+                    
+                    Original query: {original_query}
+                    
+                    Rewritten query:
+                    """
+            - step-back prompting：生成更广泛的查询
+                - 使用llm生成更广泛的query
+                - system prompt: "You are an AI assistant specialized in search strategies. Your task is to generate broader, more general versions of specific queries to retrieve relevant background information."
+                - user prompt: user_prompt = f"""
+                    Generate a broader, more general version of the following query that could help retrieve useful background information.
+                    
+                    Original query: {original_query}
+                    
+                    Step-back query:
+                    """
+            - sub-query-decomposition：将查询分解为多个子查询
+                - system prompt: "You are an AI assistant specialized in breaking down complex questions. Your task is to decompose complex queries into simpler sub-questions that, when answered together, address the original query."
+                - user prompt: user_prompt = f"""
+                    Break down the following complex query into {num_subqueries} simpler sub-queries. Each sub-query should focus on a different aspect of the original question.
+                    
+                    Original query: {original_query}
+                    
+                    Generate {num_subqueries} sub-queries, one per line, in this format:
+                    1. [First sub-query]
+                    2. [Second sub-query]
+                    And so on...
+                    """
+        - reranking-重排序
+            - 使用llm给查询结果打分
+            - system_prompt = """You are an expert at evaluating document relevance for search queries.
+                Your task is to rate documents on a scale from 0 to 10 based on how well they answer the given query.
+
+                Guidelines:
+                - Score 0-2: Document is completely irrelevant
+                - Score 3-5: Document has some relevant information but doesn't directly answer the query
+                - Score 6-8: Document is relevant and partially answers the query
+                - Score 9-10: Document is highly relevant and directly answers the query
+
+                You MUST respond with ONLY a single integer score between 0 and 10. Do not include ANY other text."""
+            - 将llm的打分和查询相似性分数结合起来，重新排序
+        - rse-Relevant Segment Extraction相关片段提取
+            - top-k查询得到相关文档块
+            - 遍历所有文档块，给每个文档块打分，如果在top-kk列表中，改分为查询时的similarity分数，不在的话置为0或者负数
+            - best_score = 0
+            - best_segments = []
+            - for start in range(len(scores)):
+                for len in range(1, min(max_len, len(scores) - start) + 1):
+                    end = start + len
+                    segment_scores = sum(scores[start:end])
+                    if segment_scores > best_score:
+                        best_score = segment_scores
+                        best_segment = [start, end]
+            - 根据连续多个文档块的得分，选择得分最高的一个或几个文档块
+
+        - 内容压缩，减少噪声
+            - 使用llm对文档进行总结或信息提取
+            - system_prompt = """You are an expert at information extraction.
+                Your task is to extract ONLY the exact sentences from the document chunk that contain information relevant 
+                to answering the user's query.
+
+                Your output should:
+                1. Include ONLY direct quotes of relevant sentences from the original text
+                2. Preserve the original wording (do not modify the text)
+                3. Include ONLY sentences that directly relate to the query
+                4. Separate extracted sentences with newlines
+                5. Do not add any commentary or additional text
+
+                Format your response as plain text with no additional comments."""
+        - 反馈循环？？？没看懂
+            - 记录之前的查询和检索结果-feedback
+            - 执行检索后，将feedback与问题和检索结果给到llm判断是否相关
+            - 如果相关，将相关的feedback也放到prompt中
+        - adaptive rag-自适应
+            - 使用llm,根据query类型，选择合适的检索策略
+            - 根据不同的检索策略，给llm不同prompt，得到检索增强方式
+            - 处理不同增强方式，再做检索
+        - self-rag:
+            - 使用llm判断是否需要检索
+            - 使用llm判断检索到的文档与query是否相关
+            - 使用llm判断检索到的文档与llm的response是否相关
+            - 使用llm判断response回答query的好坏
+            - 选择回答最好的那个，作为response
+        - proposition chunking
+            - 先用字符长度分块文档
+            - 使用llm将每个文档块重新分块，得到 proposition chunk
+            - 使用llm给proposition chunk打分,高于阈值的采用
+        - multi-model RAG with Image Caption
+            - 提取文件中的图片和文字
+            - 使用llm对图片进行描述
+            - 将图片描述信息embedding之后保存
+        - Fusion Retrieval:combining vector and keyword search
+            - 使用bm25做关键词查询
+        - graph RAG:
+            - 使用llm对文本生成关键词
+            - 创建知识图谱
+            - 使用vector数据库对关键词进行检索
+            - 找到知识图谱中检索结果的的邻居节点也作为加入检索结果
+        - Hierarchical Indices for RAG-层次结构索引
+            - 首先通过摘要识别相关文档章节，然后从这些章节中检索具体细节
+            - 使用llm对文档进行摘要生成
+        - Hypothetical Document Embedding for RAG
+            - 使用llm对问题生成假想的文档
+            - 使用假想文档进行搜索
+        - corrective RAG-纠正
+            - 使用llm评估检索到的文档
+            - 使用网络搜索纠正文档
+        - RAG with RL:
 
 * Agent
     - React??
