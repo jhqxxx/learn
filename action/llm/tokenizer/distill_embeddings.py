@@ -1,3 +1,9 @@
+'''
+Author: jhq
+Date: 2025-04-12 14:02:26
+LastEditTime: 2025-04-21 11:25:20
+Description: 
+'''
 from model2vec.distill import distill, distill_from_model
 from transformers import AutoModel, AutoTokenizer
 from model2vec import StaticModel
@@ -22,12 +28,12 @@ texts = [
 
 # Compute similarities
 # print(embeddings[0] @ embeddings[1].T)
-# m2v_model = distill(model_name=r"C:\jhq\huggingface_model\jinaai\jina-embeddings-v3", pca_dims=256, trust_remote_code=True)
-# m2v_model = distill_from_model(model, tokennizer, pca_dims=256)
-# m2v_model.save_pretrained(r"C:\jhq\huggingface_model\jinaai\m2v_jina-embeddings-v3-pca256")
+
+# m2v_model = distill_from_model(model, tokennizer, pca_dims=128)
+# m2v_model.save_pretrained(r"C:\jhq\huggingface_model\jinaai\m2v_jina-embeddings-v3-pca128")
 
 
-model = StaticModel.from_pretrained(r"C:\jhq\huggingface_model\jinaai\m2v_jina-embeddings-v3-pca256", token=None)
+model = StaticModel.from_pretrained(r"C:\jhq\huggingface_model\jinaai\m2v_jina-embeddings-v3-pca128", token=None)
 start_time = time.time()
 embeddings = model.encode(texts)
 print(time.time() - start_time)

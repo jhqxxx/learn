@@ -1,12 +1,12 @@
 '''
 Author: jhq
 Date: 2025-04-15 17:25:46
-LastEditTime: 2025-04-15 18:25:40
+LastEditTime: 2025-04-17 16:06:11
 Description: 
 '''
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
 
-model_name = r"C:\jhq\huggingface_model\Qwen\Qwen2___5-1___5B-Instruct"
+model_name = "/mnt/c/jhq/huggingface_model/Qwen/Qwen2___5-1___5B-Instruct"
 
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
@@ -26,13 +26,13 @@ text = tokenizer.apply_chat_template(
     add_generation_prompt=True,
 )
 model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
-# generated_ids = model.generate(
-#     **model_inputs,
-#     max_new_tokens=512,
-# )
-# generated_ids = [
-#     output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-# ]
+generated_ids = model.generate(
+    **model_inputs,
+    max_new_tokens=512,
+)
+generated_ids = [
+    output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+]
 
 # response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 # print(response)
