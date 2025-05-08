@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:15:50
- * @LastEditTime: 2025-04-05 14:01:36
+ * @LastEditTime: 2025-04-30 11:50:42
  * @Description:
 -->
 
@@ -74,3 +74,14 @@
 * torch.gather(input, dim, index): 从输入张量中，根据索引获取对应位置的元素
 * tensor.detach()
   返回一个新的tensor，从当前计算图中分离下来的，但是仍指向原变量的存放位置,不同之处只是requires_grad为false
+* model.fuse(): 将模型中的某些层进行融合，加速模型推理
+  * conv,bn
+  * conv,bn,relu
+  * conv,relu
+  * linear,bn
+  * bn,relu
+
+* torch.tensor(np.array): 将numpy数组转换为tensor，复制了一份数据,numpy修改，tensor不会修改
+* torch.from_numpy(np.array): 将numpy数组转换为tensor，共享数据,numpy修改，tensor也会修改
+* tensor.matmul(other): 矩阵乘法
+* @: 矩阵乘法

@@ -4,7 +4,7 @@
  * @Author: jhq
  * @Date: 2022-09-20 23:36:07
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-03-01 13:04:31
+ * @LastEditTime: 2025-05-05 15:50:12
 -->
 ### 激活函数
 * identity: f(x) = x,线性任务
@@ -67,7 +67,7 @@
 * softsign
 
 * softmax：
-    - f(X)=e^xi/∑j=1-n(e^xj)
+    - f(X)=e^xi/∑j=1...n(e^xj)
     - 用于多分类问题的激活函数，对于长度为k的任意实向量，Softmax可以将其压缩为长度为k,值在0-1范围内，并且向量中元素的总和为1的实向量
     - softmax与max不同，max函数:仅输出最大值，但softmax使较小的值具有较小的概率，并且不会直接丢弃
     - 函数分母结合了原始输出值的所有因子，意味着Softmax函数获得各种概率彼此相关

@@ -1,0 +1,126 @@
+[
+    {
+      "cityCode": 11,
+      "cityName": "北京"
+    },
+    {
+      "cityCode": 12,
+      "cityName": "天津"
+    },
+    {
+      "cityCode": 13,
+      "cityName": "河北"
+    },
+    {
+      "cityCode": 14,
+      "cityName": "山西"
+    },
+    {
+      "cityCode": 15,
+      "cityName": "内蒙古"
+    },
+    {
+      "cityCode": 21,
+      "cityName": "辽宁"
+    },
+    {
+      "cityCode": 22,
+      "cityName": "吉林"
+    },
+    {
+      "cityCode": 23,
+      "cityName": "黑龙江"
+    },
+    {
+      "cityCode": 31,
+      "cityName": "上海"
+    },
+    {
+      "cityCode": 32,
+      "cityName": "江苏"
+    },
+    {
+      "cityCode": 33,
+      "cityName": "浙江"
+    },
+    {
+      "cityCode": 34,
+      "cityName": "安徽"
+    },
+    {
+      "cityCode": 35,
+      "cityName": "福建"
+    },
+    {
+      "cityCode": 36,
+      "cityName": "江西"
+    },
+    {
+      "cityCode": 37,
+      "cityName": "山东"
+    },
+    {
+      "cityCode": 41,
+      "cityName": "河南"
+    },
+    {
+      "cityCode": 42,
+      "cityName": "湖北"
+    },
+    {
+      "cityCode": 43,
+      "cityName": "湖南"
+    },
+    {
+      "cityCode": 44,
+      "cityName": "广东"
+    },
+    {
+      "cityCode": 45,
+      "cityName": "广西"
+    },
+    {
+      "cityCode": 46,
+      "cityName": "海南"
+    },
+    {
+      "cityCode": 50,
+      "cityName": "重庆"
+    },
+    {
+      "cityCode": 51,
+      "cityName": "四川"
+    },
+    {
+      "cityCode": 52,
+      "cityName": "贵州"
+    },
+    {
+      "cityCode": 53,
+      "cityName": "云南"
+    },
+    {
+      "cityCode": 54,
+      "cityName": "西藏"
+    },
+    {
+      "cityCode": 61,
+      "cityName": "陕西"
+    },
+    {
+      "cityCode": 62,
+      "cityName": "甘肃"
+    },
+    {
+      "cityCode": 63,
+      "cityName": "青海"
+    },
+    {
+      "cityCode": 64,
+      "cityName": "宁夏"
+    },
+    {
+      "cityCode": 65,
+      "cityName": "新疆"
+    }
+]

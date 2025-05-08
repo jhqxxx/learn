@@ -15,3 +15,7 @@ LLM/transformers/test_trainer
 */ML-LHY/*.json
 */ML-LHY/*.txt
 diffusion/ddpm-*
+*/.gitignore
+*/*/.gitignore
+*/*/*/.gitignore
+*/*/*/*/.gitignore

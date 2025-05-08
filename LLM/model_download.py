@@ -1,24 +1,24 @@
 '''
 Author: jhq
 Date: 2025-02-24 17:33:48
-LastEditTime: 2025-04-18 17:34:49
+LastEditTime: 2025-04-29 14:21:40
 Description: 
 '''
 from modelscope import snapshot_download, AutoModel, AutoTokenizer
 import os
 from modelscope.msdatasets import MsDataset
 
-import kagglehub
+# import kagglehub
 
 # Download latest version
 # path = kagglehub.dataset_download("lunarwhite/anime-face-dataset-ntumlds")
 
 # print("Path to dataset files:", path)
 
-# model_dir = snapshot_download('Qwen/Qwen2.5-1.5B-Instruct',
-#                               cache_dir='C:/jhq/huggingface_model', revision='master')
+model_dir = snapshot_download('Qwen/Qwen3-8B',
+                              cache_dir=r'C:/jhq/huggingface_model', revision='master')
 
-ds =  MsDataset.load('kisskissMardy/CropDiseaseNer', subset_name='default', split='train')
+# ds =  MsDataset.load('kisskissMardy/CropDiseaseNer', subset_name='default', split='train')
 
 # ds = MsDataset.load('AI-ModelScope/webnovel_cn', split='train', download_mode=DownloadMode.FORCE_REDOWNLOAD) 
 # dataset = MsDataset.load("kuailejingling/nongye", cache_dir=r"C:/jhq/huggingface_dataset", download_mode=DownloadMode.FORCE_REDOWNLOAD)

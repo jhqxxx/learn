@@ -1,7 +1,7 @@
 <!--
  * @Author: jhq
  * @Date: 2025-02-08 14:15:50
- * @LastEditTime: 2025-04-10 15:22:07
+ * @LastEditTime: 2025-04-27 20:28:35
  * @Description:
 -->
 
@@ -32,3 +32,6 @@
 - yeild:声明一个函数是生成器函数，生成器函数在函数执行过程中，每次遇到yield关键字，就返回一个值，并挂起，等下次调用next()方法时，再从上次挂起的位置继续执行，直到遇到下一个yield关键字，如此反复，直到函数执行完毕，返回StopIteration异常
 
 - np.memmap():能将大文件分段读写，而不是一次性将整个文件读入内存，从而减少内存占用
+
+- eval():将字符串表达式转化为代码，并执行
+- eval(expression, global_vars, local_vars):将字符串表达式转化为代码，并执行，expression为字符串表达式，global_vars为全局变量字典，local_vars为局部变量字典
