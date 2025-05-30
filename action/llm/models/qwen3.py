@@ -1,11 +1,19 @@
 '''
 Author: jhq
 Date: 2025-04-29 14:15:50
-LastEditTime: 2025-04-29 16:05:52
+LastEditTime: 2025-05-30 20:41:04
 Description: 
 '''
-from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer, BitsAndBytesConfig
 import torch
+from openai.types.chat.chat_completion_message import ChatCompletionMessage
+from openai.types.chat.chat_completion import Choice
+import uuid
+import time
+import json
+from threading import Thread
+from sse_starlette.sse import EventSourceResponse
+import asyncio
 
 class Qwen3Chatbot():
     def __init__(self, model_name="/mnt/c/jhq/huggingface_model/Qwen/Qwen3-8B"):
@@ -25,7 +33,14 @@ class Qwen3Chatbot():
             quantization_config=nf4_config
         )
         self.history = []
-        self.history_num = 5
+        self.history_num = 3
+        self.model_name = model_name.split('/')[-1]
+        self.streamer = TextIteratorStreamer(
+            self.tokenizer,
+            timeout=60.0,
+            skip_prompt=True,
+            skip_special_tokens=True
+        )
     
     def generate_response(self, user_input):
         messages = self.history + [{"role": "user", "content": user_input}]
@@ -45,6 +60,79 @@ class Qwen3Chatbot():
             self.history.pop(0)
         
         return response
+    def get_chat_completions(self, output_text, start_time):        
+        chat_completions = {}
+        chat_completions["id"] = str(uuid.uuid4())
+        chat_completions["object"] = "chat.completion"
+        chat_completions["created"] = int(start_time)
+        chat_completions["model"] = self.model_name
+        chat_completions["choices"] = []
+        for idx, txt in enumerate(output_text):
+            chat_completions["choices"].append(
+                Choice(
+                    finish_reason="stop",
+                    index=idx,
+                    message=ChatCompletionMessage(
+                        role="assistant", 
+                        content=txt) 
+                        ))  
+        return chat_completions
+    def generate_use_mes(self, messages):
+        start_time = time.time()
+        text = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+        response_ids = self.model.generate(**inputs, max_new_tokens=32768)[0][inputs.input_ids.shape[1]:].tolist()
+        response = self.tokenizer.decode(response_ids, skip_special_tokens=True)
+        chat_completions = self.get_chat_completions(response, start_time)        
+        return chat_completions    
+    def stream_completions(self, text):
+        chat_completions = {}
+        chat_completions["id"] = str(uuid.uuid4())
+        chat_completions["object"] = "chat.completion.chunk"
+        chat_completions["created"] = int(time.time())
+        chat_completions["model"] = self.model_name
+        chat_completions["choices"] = []
+        chat_completions["choices"].append(
+            {"index": 0,
+             "delta": {"content": text}})  
+        return json.dumps(chat_completions)
+    
+    def generate_stream(self, messages):
+        text = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+        generation_args = {
+            "max_new_tokens": 32768,
+            "streamer": self.streamer,
+            "do_sample": False
+        }
+        generation_args.update(inputs)
+        thread = Thread(target=self.model.generate, kwargs=generation_args)
+        thread.start()
+        async def stream_output(streamer):
+            for text in streamer:
+                if text:
+                    res = self.stream_completions(text)
+                    print(time.time())
+                    print(res)
+                    yield {
+                        "event": "message",
+                        "data": res
+                        }
+                    await asyncio.sleep(0.05)
+            yield {
+                "event": "message",
+                "data": "[DONE]"
+                }
+        
+        return EventSourceResponse(stream_output(self.streamer))
 
 if __name__ == "__main__":
     chatbot = Qwen3Chatbot()  

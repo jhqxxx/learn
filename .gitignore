@@ -11,6 +11,7 @@ LLM/*.json
 LLM/transformers/test_trainer
 */__pycache__
 */*/__pycache__
+*/*/*/__pycache__
 */ML-LHY/ML*
 */ML-LHY/*.json
 */ML-LHY/*.txt

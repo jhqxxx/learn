@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-02-24 17:33:48
-LastEditTime: 2025-04-29 14:21:40
+LastEditTime: 2025-05-30 19:23:02
 Description: 
 '''
 from modelscope import snapshot_download, AutoModel, AutoTokenizer
@@ -14,8 +14,8 @@ from modelscope.msdatasets import MsDataset
 # path = kagglehub.dataset_download("lunarwhite/anime-face-dataset-ntumlds")
 
 # print("Path to dataset files:", path)
-
-model_dir = snapshot_download('Qwen/Qwen3-8B',
+# 
+model_dir = snapshot_download('Qwen/Qwen3-0.6B',
                               cache_dir=r'C:/jhq/huggingface_model', revision='master')
 
 # ds =  MsDataset.load('kisskissMardy/CropDiseaseNer', subset_name='default', split='train')

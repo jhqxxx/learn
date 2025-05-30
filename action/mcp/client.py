@@ -1,7 +1,7 @@
 '''
 Author: jhq
 Date: 2025-05-01 15:42:36
-LastEditTime: 2025-05-07 21:17:59
+LastEditTime: 2025-05-10 18:45:37
 Description: 
 '''
 import asyncio
@@ -50,14 +50,15 @@ class MCPClient:
         ]
         
         response = await self.session.list_tools()
-        available_tools = [{
-            "type": "function",
-            "function": {
-                "name": tool.name,
-                "description": tool.description,
-                "parameters": tool.inputSchema
-            }
-        } for tool in response.tools]
+        # available_tools = [{
+        #     "type": "function",
+        #     "function": {
+        #         "name": tool.name,
+        #         "description": tool.description,
+        #         "parameters": tool.inputSchema
+        #     }
+        # } for tool in response.tools]
+        available_tools = []
         
         response = self.llm.chat.completions.create(
             model="deepseek-chat",
@@ -73,7 +74,7 @@ class MCPClient:
             if choice.finish_reason == "stop":
                 final_text.append(choice.message.content)                
             elif choice.finish_reason == "tool_calls":
-                # messages.append(choice.message.model_dump())
+                messages.append(choice.message.model_dump())
                 # messages.append({
                 #     "role": "assistant",
                 #     "metdata": choice.message.tool_calls[0].function.name,
